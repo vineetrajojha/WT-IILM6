@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form</title>
+</head>
+<body>
+    <h1>this is a contact form</h1>
+    <!--submit post method-->
+    <form action="/submit" method="post">
+        
+    <!--submit name -->
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+        <br><br>
+        
+    <!--submit email -->
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <br><br>
+
+    <!--submit Phone number -->
+         <label for="number">Phone:</label>
+        <input type="number" id="number" name="number" required>
+        <br><br>
+
+    <!--submit password -->
+        <label for="password">Passw:</label>
+        <input type="password" id="pass" name="pass" required>
+        <br><br>
+
+    <!--submit a text -->
+        <label for="message">Message:</label><br>
+        <textarea id="message" name="message" rows="4" cols="20" required></textarea>
+        <br><br>
+
+    <!--submit country -->
+        <lable for="country">Choose Country</lable><br>
+        <select id="country" name="country">
+            <option value="usa">USA</option>
+            <option value="canada">Canada</option>
+            <option value="uk">UK</option>
+            <option value="australia">Australia</option>
+        </select>
+        <br><br>
+
+    <!--submit radio -->
+        <label for="gender">Choose Gender</label>
+        <label type="radio" id="gender" name="gender">
+            <input type="radio" id="gender" name="gender">
+            Male
+        </label>
+        <label type="radio" id="gender" name="gender">
+            <input type="radio" id="gender" name="gender">
+        Female
+        </label>
+        <br><br>
+
+    <!--submit checkbox -->
+        <label for="gender">Branch</label>
+        <label type="checkbox" id="branch" name="branch">
+            <input type="checkbox" id="branch" name="branch">
+        B.Tech
+        </label>
+        <label type="checkbox" id="branch" name="branch">
+            <input type="checkbox" id="branch" name="branch">
+        M.Tech
+        </label>
+        <label type="checkbox" id="branch" name="branch">
+            <input type="checkbox" id="branch" name="branch">
+        BBA
+        </label>
+        <br><br>
+
+    <!--submit button -->
+        <input type="submit" value="Submit">
+</body>
+</html>
