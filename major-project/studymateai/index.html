@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudymateAI - AI Study Planner</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <!-- Charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="dark-theme">
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <i class="ph-fill ph-graduation-cap logo-icon"></i>
+                <h1 class="logo-text">StudymateAI</h1>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="#dashboard" class="nav-item active" data-view="dashboard">
+                    <i class="ph ph-squares-four"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#planner" class="nav-item" data-view="planner">
+                    <i class="ph ph-calendar-blank"></i>
+                    <span>Planner</span>
+                </a>
+                <a href="#subjects" class="nav-item" data-view="subjects">
+                    <i class="ph ph-books"></i>
+                    <span>Subjects</span>
+                </a>
+                <a href="#analytics" class="nav-item" data-view="analytics">
+                    <i class="ph ph-chart-bar"></i>
+                    <span>Analytics</span>
+                </a>
+                <a href="#reminders" class="nav-item" data-view="reminders">
+                    <i class="ph ph-bell"></i>
+                    <span>Reminders</span>
+                </a>
+                <a href="#settings" class="nav-item" data-view="settings">
+                    <i class="ph ph-gear"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="pomodoro-widget glass-card">
+                    <div class="pomodoro-header">
+                        <i class="ph ph-tomato"></i>
+                        <span>Pomodoro Timer</span>
+                    </div>
+                    <div class="pomodoro-controls">
+                        <span class="pomodoro-time">25:00</span>
+                        <button class="btn-icon pomodoro-play"><i class="ph-fill ph-play"></i></button>
+                    </div>
+                </div>
+                
+                <div class="upcoming-exam-widget">
+                    <div class="exam-widget-info">
+                        <span class="exam-icon">📐</span>
+                        <div>
+                            <span class="exam-name">Maths Exam</span>
+                            <span class="exam-days">18 days left</span>
+                        </div>
+                    </div>
+                    <div class="progress-bar-container mt-2">
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" style="width: 62%; background: var(--success);"></div>
+                        </div>
+                        <span class="progress-text">Progress: 62%</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+             <!-- Topbar Mobile (hidden on desktop) -->
+             <header class="mobile-topbar hidden-desktop">
+                <div class="mobile-logo">
+                    <i class="ph-fill ph-graduation-cap logo-icon"></i>
+                    <h2>StudymateAI</h2>
+                </div>
+                <button class="btn-icon mobile-menu-toggle"><i class="ph ph-list"></i></button>
+            </header>
+
+            <!-- Views Container -->
+            <div id="views-container">
+                <!-- Dashboard View -->
+                <section id="dashboard" class="view-section active">
+                    <header class="view-header">
+                        <div>
+                            <h2 class="view-title greeting-text">Good morning, Rahul 👋</h2>
+                            <p class="view-subtitle current-date" id="current-date-display"></p>
+                        </div>
+                        <div class="user-profile">
+                            <img src="" alt="User Avatar" id="user-avatar" class="avatar-img">
+                        </div>
+                    </header>
+                    
+                    <div class="dashboard-grid">
+                        <!-- Stats Row -->
+                        <div class="stats-row">
+                            <div class="stat-card glass-card">
+                                <div class="stat-icon-wrapper" style="background: rgba(108, 99, 255, 0.1); color: var(--primary);">
+                                    <i class="ph ph-clock"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <span class="stat-value" id="stat-hours">24.5h</span>
+                                    <span class="stat-label">Study this week</span>
+                                </div>
+                            </div>
+                            <div class="stat-card glass-card">
+                                <div class="stat-icon-wrapper" style="background: rgba(0, 212, 170, 0.1); color: var(--secondary);">
+                                    <i class="ph ph-check-circle"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <span class="stat-value" id="stat-topics">38 / 72</span>
+                                    <span class="stat-label">Topics completed</span>
+                                </div>
+                            </div>
+                            <div class="stat-card glass-card">
+                                <div class="stat-icon-wrapper" style="background: rgba(255, 179, 71, 0.1); color: var(--warning);">
+                                    <i class="ph ph-fire"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <span class="stat-value" id="stat-streak">12 days</span>
+                                    <span class="stat-label">Study streak</span>
+                                </div>
+                            </div>
+                            <div class="stat-card glass-card">
+                                <div class="stat-icon-wrapper" style="background: rgba(255, 107, 107, 0.1); color: var(--danger);">
+                                    <i class="ph ph-hourglass-high"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <span class="stat-value" id="stat-exam-timer" style="font-family: var(--font-mono);">8d 4h</span>
+                                    <span class="stat-label">Next exam in</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Main Grid Area -->
+                        <div class="dashboard-main-columns">
+                            <!-- Left Column -->
+                            <div class="main-column-left">
+                                <!-- Today's Schedule -->
+                                <div class="panel glass-card">
+                                    <div class="panel-header">
+                                        <h3>Today's Schedule</h3>
+                                        <button class="btn-text">View All</button>
+                                    </div>
+                                    <div class="schedule-list" id="today-schedule">
+                                        <!-- Populated by JS -->
+                                    </div>
+                                </div>
+                                
+                                 <!-- Weekly Progress Chart -->
+                                 <div class="panel glass-card mt-4">
+                                    <div class="panel-header">
+                                        <h3>Weekly Progress</h3>
+                                    </div>
+                                    <div class="chart-container">
+                                        <canvas id="weeklyProgressChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right Column -->
+                            <div class="main-column-right">
+                                <!-- AI Suggestion Banner -->
+                                <div class="ai-banner glass-card g-glow-secondary">
+                                    <div class="ai-banner-header">
+                                        <i class="ph-fill ph-sparkle" style="color: var(--secondary);"></i>
+                                        <span>AI Insight</span>
+                                    </div>
+                                    <p>Based on your pace, you need 3 more hours on Organic Chemistry this week.</p>
+                                    <button class="btn-secondary w-full mt-3">Adjust Plan</button>
+                                </div>
+
+                                <!-- Upcoming Exams -->
+                                <div class="panel glass-card mt-4">
+                                    <div class="panel-header">
+                                        <h3>Upcoming Exams</h3>
+                                    </div>
+                                    <div class="exam-list" id="upcoming-exams">
+                                        <!-- Populated by JS -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Planner View -->
+                <section id="planner" class="view-section hidden">
+                    <header class="view-header">
+                        <div>
+                            <h2 class="view-title">AI Timetable Generator</h2>
+                            <p class="view-subtitle">Generate optimized study plans automatically.</p>
+                        </div>
+                    </header>
+                    <div class="planner-layout">
+                        <div class="planner-sidebar glass-card">
+                            <h3>Plan Details</h3>
+                            <form id="planner-form" class="mt-4 form-group">
+                                <div class="input-group">
+                                    <label>Subject</label>
+                                    <select class="form-input" id="plan-subject">
+                                        <option value="sub-1">Advanced Mathematics</option>
+                                        <option value="sub-2">Organic Chemistry</option>
+                                        <option value="sub-3">Data Structures</option>
+                                    </select>
+                                </div>
+                                <div class="input-group">
+                                    <label>Priority</label>
+                                    <select class="form-input" id="plan-priority">
+                                        <option value="critical">Critical (Exam Soon)</option>
+                                        <option value="high">High</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="low">Low</option>
+                                    </select>
+                                </div>
+                                <div class="input-group">
+                                    <label>Available Study Hours (Daily)</label>
+                                    <input type="range" class="form-input-range" min="1" max="8" value="4" id="plan-hours">
+                                    <span id="plan-hours-display" class="range-display">4 hours</span>
+                                </div>
+                                <button type="button" class="btn-primary w-full mt-4" id="generate-plan-btn">
+                                    <i class="ph-fill ph-sparkle"></i> Generate My Timetable
+                                </button>
+                            </form>
+                        </div>
+                        <div class="planner-main glass-card">
+                            <div class="panel-header">
+                                <h3>Weekly Timetable</h3>
+                                <div class="timetable-actions">
+                                    <button class="btn-icon"><i class="ph ph-caret-left"></i></button>
+                                    <span>This Week</span>
+                                    <button class="btn-icon"><i class="ph ph-caret-right"></i></button>
+                                </div>
+                            </div>
+                            <div class="timetable-grid" id="timetable">
+                                <!-- Timetable Grid structure -->
+                                <div class="time-column">
+                                    <div class="grid-cell time-header"></div>
+                                    <div class="grid-cell time-label">6 PM</div>
+                                    <div class="grid-cell time-label">7 PM</div>
+                                    <div class="grid-cell time-label">8 PM</div>
+                                    <div class="grid-cell time-label">9 PM</div>
+                                    <div class="grid-cell time-label">10 PM</div>
+                                </div>
+                                <div class="day-column">
+                                    <div class="grid-cell day-header">Mon</div>
+                                    <div class="grid-cell session-slot"><div class="session-block" style="background: var(--primary);">📐 Maths</div></div>
+                                    <div class="grid-cell session-slot"><div class="session-block" style="background: var(--danger);">💻 DSA</div></div>
+                                    <div class="grid-cell session-slot"></div>
+                                    <div class="grid-cell session-slot"><div class="session-block" style="background: var(--secondary);">⚗️ Chem</div></div>
+                                    <div class="grid-cell session-slot"></div>
+                                </div>
+                                <div class="day-column">
+                                    <div class="grid-cell day-header">Tue</div>
+                                    <div class="grid-cell session-slot"></div>
+                                    <div class="grid-cell session-slot"><div class="session-block" style="background: var(--primary);">📐 Maths</div></div>
+                                    <div class="grid-cell session-slot"><div class="session-block" style="background: var(--danger);">💻 DSA</div></div>
+                                    <div class="grid-cell session-slot"></div>
+                                    <div class="grid-cell session-slot"></div>
+                                </div>
+                                <div class="day-column">
+                                    <div class="grid-cell day-header">Wed</div>
+                                    <div class="grid-cell session-slot"><div class="session-block" style="background: var(--secondary);">⚗️ Chem</div></div>
+                                    <div class="grid-cell session-slot"></div>
+                                    <div class="grid-cell session-slot"></div>
+                                    <div class="grid-cell session-slot"><div class="session-block" style="background: var(--primary);">📐 Maths</div></div>
+                                    <div class="grid-cell session-slot"></div>
+                                </div>
+                                <div class="day-column">
+                                    <div class="grid-cell day-header">Thu</div>
+                                    <div class="grid-cell session-slot"></div>
+                                    <div class="grid-cell session-slot"><div class="session-block" style="background: var(--warning);">⚛️ Physics</div></div>
+                                    <div class="grid-cell session-slot"><div class="session-block" style="background: var(--warning);">⚛️ Physics</div></div>
+                                    <div class="grid-cell session-slot"></div>
+                                    <div class="grid-cell session-slot"></div>
+                                </div>
+                                 <div class="day-column">
+                                    <div class="grid-cell day-header">Fri</div>
+                                    <div class="grid-cell session-slot"><div class="session-block" style="background: var(--primary);">📐 Maths</div></div>
+                                    <div class="grid-cell session-slot"></div>
+                                    <div class="grid-cell session-slot"><div class="session-block" style="background: var(--danger);">💻 DSA</div></div>
+                                    <div class="grid-cell session-slot"></div>
+                                    <div class="grid-cell session-slot"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Subjects View -->
+                <section id="subjects" class="view-section hidden">
+                    <header class="view-header">
+                        <div>
+                            <h2 class="view-title">Subjects</h2>
+                            <p class="view-subtitle">Manage your syllabus and track topic progress.</p>
+                        </div>
+                        <button class="btn-primary"><i class="ph ph-plus"></i> Add Subject</button>
+                    </header>
+                    <div class="subjects-grid" id="subjects-container">
+                        <!-- Populated by JS -->
+                    </div>
+                </section>
+
+                <!-- Analytics View -->
+                <section id="analytics" class="view-section hidden">
+                     <header class="view-header">
+                        <div>
+                            <h2 class="view-title">Progress Analytics</h2>
+                            <p class="view-subtitle">Track your study habits and performance over time.</p>
+                        </div>
+                    </header>
+                    <div class="analytics-grid">
+                        <div class="panel glass-card col-span-2">
+                            <div class="panel-header">
+                                <h3>Weekly Study Hours</h3>
+                            </div>
+                            <div class="chart-container" style="height: 300px;">
+                                <canvas id="analyticsWeeklyChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="panel glass-card">
+                            <div class="panel-header">
+                                <h3>Subject Distribution</h3>
+                            </div>
+                            <div class="chart-container" style="height: 300px;">
+                                <canvas id="subjectDistributionChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Reminders View -->
+                <section id="reminders" class="view-section hidden">
+                     <header class="view-header">
+                        <div>
+                            <h2 class="view-title">Smart Reminders</h2>
+                            <p class="view-subtitle">Manage your study alerts and AI nudges.</p>
+                        </div>
+                        <button class="btn-primary"><i class="ph ph-plus"></i> Add Reminder</button>
+                    </header>
+                    <div class="reminders-list-container glass-card">
+                        <div class="reminders-list" id="reminders-container">
+                             <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Settings View -->
+                <section id="settings" class="view-section hidden">
+                     <header class="view-header">
+                        <div>
+                            <h2 class="view-title">Settings</h2>
+                            <p class="view-subtitle">Manage your profile and app preferences.</p>
+                        </div>
+                    </header>
+                    <div class="settings-layout">
+                        <div class="panel glass-card">
+                            <h3>Profile Settings</h3>
+                            <!-- Add some basic form inputs -->
+                             <p class="mt-4 text-gray">Settings implementation is a placeholder.</p>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Application Logic -->
+    <script src="js/data.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
