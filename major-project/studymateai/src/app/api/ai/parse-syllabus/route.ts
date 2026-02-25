@@ -2,8 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { z } from "zod";
 import { parseSyllabus } from "@/lib/ai/parse-syllabus";
-import { db } from "@/lib/db";
-import { topics } from "@/db/schema";
+import { dummyTopics } from "@/lib/dummy-data";
 import { createId } from "@paralleldrive/cuid2";
 
 const RequestSchema = z.object({
@@ -56,7 +55,7 @@ export async function POST(req: NextRequest) {
         }
 
         if (topicsToInsert.length > 0) {
-            await db.insert(topics).values(topicsToInsert);
+            dummyTopics.push(...(topicsToInsert as any));
         }
 
         return NextResponse.json({ data: result });

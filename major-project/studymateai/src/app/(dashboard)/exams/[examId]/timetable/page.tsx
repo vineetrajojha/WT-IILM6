@@ -1,22 +1,19 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { db } from "@/lib/db";
-import { exams, sessions } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { dummyExams, dummySessions } from "@/lib/dummy-data";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 
 export default async function TimetablePage({ params }: { params: Promise<{ examId: string }> | { examId: string } }) {
     const sessionUser = await auth();
-    if (!sessionUser?.user?.id) redirect("/login");
 
     const resolvedParams = await params;
 
-    const [exam] = await db.select().from(exams).where(eq(exams.id, resolvedParams.examId));
-    if (!exam || exam.userId !== sessionUser.user.id) redirect("/exams");
+    const exam = dummyExams.find(e => e.id === resolvedParams.examId);
+    if (!exam || (exam.userId !== sessionUser?.user?.id && exam.userId !== "user-1")) redirect("/exams");
 
-    const examSessions = await db.select().from(sessions).where(eq(sessions.examId, exam.id));
+    const examSessions = dummySessions.filter(s => s.examId === exam.id);
 
     return (
         <div className="space-y-6">

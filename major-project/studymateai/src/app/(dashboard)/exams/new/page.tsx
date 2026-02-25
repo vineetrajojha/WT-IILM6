@@ -4,9 +4,6 @@ import { ExamForm } from "@/components/exams/ExamForm";
 
 export default async function NewExamPage() {
     const session = await auth();
-    if (!session?.user?.id) {
-        redirect("/login");
-    }
 
     return (
         <div className="max-w-2xl mx-auto space-y-6">

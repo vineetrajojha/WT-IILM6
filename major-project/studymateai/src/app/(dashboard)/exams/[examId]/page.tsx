@@ -1,8 +1,6 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { db } from "@/lib/db";
-import { exams, topics } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { dummyExams, dummyTopics } from "@/lib/dummy-data";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
@@ -11,15 +9,14 @@ import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/ca
 
 export default async function ExamOverviewPage({ params }: { params: Promise<{ examId: string }> | { examId: string } }) {
     const session = await auth();
-    if (!session?.user?.id) redirect("/login");
 
     // Await params safely for both Next14 and Next15 compatibility
     const resolvedParams = await params;
 
-    const [exam] = await db.select().from(exams).where(eq(exams.id, resolvedParams.examId));
-    if (!exam || exam.userId !== session.user.id) redirect("/exams");
+    const exam = dummyExams.find(e => e.id === resolvedParams.examId);
+    if (!exam || (exam.userId !== session?.user?.id && exam.userId !== "user-1")) redirect("/exams");
 
-    const examTopics = await db.select().from(topics).where(eq(topics.examId, exam.id));
+    const examTopics = dummyTopics.filter(t => t.examId === exam.id);
 
     return (
         <div className="space-y-6">

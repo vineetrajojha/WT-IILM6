@@ -1,12 +1,10 @@
 "use server";
 
 import { auth } from "@/lib/auth";
-import { db } from "@/lib/db";
-import { exams } from "@/db/schema";
+import { dummyExams } from "@/lib/dummy-data";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createId } from "@paralleldrive/cuid2";
-import { eq } from "drizzle-orm";
 
 const CreateExamSchema = z.object({
     subject: z.string().min(1, "Subject is required").max(100),
@@ -22,14 +20,15 @@ export async function createExam(formData: FormData) {
         examDate: formData.get("examDate"),
     });
 
-    const [exam] = await db
-        .insert(exams)
-        .values({
-            id: createId(),
-            userId: session.user.id,
-            ...parsed,
-        })
-        .returning();
+    const exam = {
+        id: createId(),
+        userId: session.user.id,
+        status: "active",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        ...parsed,
+    };
+    dummyExams.push(exam as any);
 
     revalidatePath("/dashboard");
     revalidatePath("/exams");
@@ -40,7 +39,8 @@ export async function deleteExam(examId: string) {
     const session = await auth();
     if (!session?.user?.id) throw new Error("Unauthorized");
 
-    await db.delete(exams).where(eq(exams.id, examId));
+    const idx = dummyExams.findIndex(e => e.id === examId);
+    if (idx !== -1) dummyExams.splice(idx, 1);
 
     revalidatePath("/dashboard");
     revalidatePath("/exams");

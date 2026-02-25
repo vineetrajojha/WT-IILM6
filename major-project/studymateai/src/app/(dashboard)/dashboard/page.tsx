@@ -1,8 +1,6 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { db } from "@/lib/db";
-import { exams } from "@/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { dummyExams } from "@/lib/dummy-data";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,14 +8,8 @@ import { format } from "date-fns";
 
 export default async function DashboardPage() {
     const session = await auth();
-    if (!session?.user?.id) {
-        redirect("/login");
-    }
 
-    const userExams = await db.query.exams.findMany({
-        where: eq(exams.userId, session.user.id),
-        orderBy: [desc(exams.createdAt)],
-    });
+    let userExams = dummyExams.filter(exam => exam.userId === session?.user?.id || exam.userId === "user-1");
 
     return (
         <div className="space-y-6">
@@ -25,7 +17,7 @@ export default async function DashboardPage() {
                 <div>
                     <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
                     <p className="text-muted-foreground">
-                        Welcome back, {session.user.name || "Student"}!
+                        Welcome back, {session?.user?.name || "Student"}!
                     </p>
                 </div>
                 <Link href="/exams/new">

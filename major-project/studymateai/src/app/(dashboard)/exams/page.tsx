@@ -1,8 +1,6 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { db } from "@/lib/db";
-import { exams } from "@/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { dummyExams } from "@/lib/dummy-data";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,14 +10,8 @@ import { Input } from "@/components/ui/input";
 
 export default async function ExamsPage() {
     const session = await auth();
-    if (!session?.user?.id) {
-        redirect("/login");
-    }
 
-    const userExams = await db.query.exams.findMany({
-        where: eq(exams.userId, session.user.id),
-        orderBy: [desc(exams.createdAt)],
-    });
+    const userExams = dummyExams.filter(exam => exam.userId === session?.user?.id || exam.userId === "user-1");
 
     return (
         <div className="space-y-6 flex flex-col h-full">
@@ -64,8 +56,8 @@ export default async function ExamsPage() {
                             <CardContent>
                                 <div className="flex items-center justify-between mt-4">
                                     <span className={`text-xs px-2 py-1 rounded-full ${exam.status === 'active' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
-                                            exam.status === 'completed' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' :
-                                                'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400'
+                                        exam.status === 'completed' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' :
+                                            'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400'
                                         }`}>
                                         {exam.status.charAt(0).toUpperCase() + exam.status.slice(1)}
                                     </span>

@@ -6,7 +6,6 @@ import { ArrowLeft } from "lucide-react";
 
 export default async function FlashcardsPage({ params }: { params: Promise<{ examId: string }> | { examId: string } }) {
     const sessionUser = await auth();
-    if (!sessionUser?.user?.id) redirect("/login");
     const resolvedParams = await params;
 
     return (
