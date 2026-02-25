@@ -13,13 +13,13 @@ const dummyData = {
         study_start_time: "18:00",
         study_end_time: "22:00"
     },
-    
+
     subjects: [
-        { id: "sub-1", name: "Advanced Mathematics", emoji: "📐", color: "#6C63FF", exam_date: "2026-03-15", priority: "critical", progress: 62 },
-        { id: "sub-2", name: "Organic Chemistry", emoji: "⚗️", color: "#00D4AA", exam_date: "2026-03-20", priority: "high", progress: 45 },
-        { id: "sub-3", name: "Data Structures", emoji: "💻", color: "#FF6B6B", exam_date: "2026-03-25", priority: "high", progress: 80 },
-        { id: "sub-4", name: "Engineering Physics", emoji: "⚛️", color: "#FFB347", exam_date: "2026-04-02", priority: "medium", progress: 30 },
-        { id: "sub-5", name: "Technical Writing", emoji: "✍️", color: "#4ADE80", exam_date: "2026-04-10", priority: "low", progress: 10 }
+        { id: "sub-1", name: "Advanced Mathematics", icon: "ruler", color: "#6C63FF", exam_date: "2026-03-15", priority: "critical", progress: 62 },
+        { id: "sub-2", name: "Organic Chemistry", icon: "flask", color: "#00D4AA", exam_date: "2026-03-20", priority: "high", progress: 45 },
+        { id: "sub-3", name: "Data Structures", icon: "desktop", color: "#FF6B6B", exam_date: "2026-03-25", priority: "high", progress: 80 },
+        { id: "sub-4", name: "Engineering Physics", icon: "atom", color: "#FFB347", exam_date: "2026-04-02", priority: "medium", progress: 30 },
+        { id: "sub-5", name: "Technical Writing", icon: "pen-nib", color: "#4ADE80", exam_date: "2026-04-10", priority: "low", progress: 10 }
     ],
 
     topics: {
@@ -41,9 +41,9 @@ const dummyData = {
     },
 
     todaySessions: [
-        { time: "6:00 PM", duration: "1h", subjectId: "sub-1", subjectName: "Adv. Maths", topic: "Complex Analysis", color: "#6C63FF", emoji: "📐", type: "learn" },
-        { time: "7:00 PM", duration: "1h", subjectId: "sub-2", subjectName: "Org. Chemistry", topic: "Alkenes", color: "#00D4AA", emoji: "⚗️", type: "revise" },
-        { time: "8:00 PM", duration: "1.5h", subjectId: "sub-3", subjectName: "Data Structures", topic: "Graphs", color: "#FF6B6B", emoji: "💻", type: "practice" }
+        { time: "6:00 PM", duration: "1h", subjectId: "sub-1", subjectName: "Adv. Maths", topic: "Complex Analysis", color: "#6C63FF", icon: "ruler", type: "learn" },
+        { time: "7:00 PM", duration: "1h", subjectId: "sub-2", subjectName: "Org. Chemistry", topic: "Alkenes", color: "#00D4AA", icon: "flask", type: "revise" },
+        { time: "8:00 PM", duration: "1.5h", subjectId: "sub-3", subjectName: "Data Structures", topic: "Graphs", color: "#FF6B6B", icon: "desktop", type: "practice" }
     ],
 
     weeklyHours: [
@@ -62,7 +62,7 @@ const dummyData = {
         { id: "r-3", title: "Revise Differential Equations", type: "revision", icon: "book-open", color: "#FFB347", description: "Last studied 4 days ago", time: "Today", is_active: true },
         { id: "r-4", title: "Organic Chemistry nudge", type: "ai_nudge", icon: "sparkle", color: "#00D4AA", description: "Haven't touched in 3 days", time: "Suggested", is_active: true }
     ],
-    
+
     stats: {
         hoursStudied: "24.5",
         topicsCompleted: 38,

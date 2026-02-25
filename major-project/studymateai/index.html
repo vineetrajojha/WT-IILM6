@@ -1,26 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StudymateAI - AI Study Planner</title>
-    
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
     <!-- Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    
+
     <!-- Charts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="dark-theme">
-    <div class="app-container">
+
+<body class="light-theme">
+    <!-- Authentication View -->
+    <div id="auth-view" class="auth-container">
+        <div class="auth-box glass-card">
+            <div class="auth-header">
+                <i class="ph-fill ph-graduation-cap logo-icon" style="font-size: 2.5rem; color: var(--primary);"></i>
+                <h2>Welcome to StudymateAI</h2>
+                <p class="text-muted">Log in to continue to your study planner.</p>
+            </div>
+
+            <form id="login-form" class="form-group mt-6">
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <input type="email" id="login-email" class="form-input" placeholder="anik@demo.com" required>
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="login-password" class="form-input" placeholder="Anything" required>
+                </div>
+                <p id="login-error" class="text-danger mt-2 hidden" style="font-size: 0.85rem;">Invalid email. Try
+                    anik@demo.com</p>
+                <button type="submit" class="btn-primary w-full mt-4">Log In</button>
+            </form>
+
+            <div class="auth-footer mt-6" style="text-align: center;">
+                <p class="text-muted" style="font-size: 0.9rem;">Don't have an account? <a href="#"
+                        style="color: var(--primary); text-decoration: none;">Sign Up</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application Container -->
+    <div id="app-container" class="app-container hidden">
         <!-- Sidebar Navigation -->
         <aside class="sidebar">
             <div class="sidebar-header">
@@ -66,10 +101,10 @@
                         <button class="btn-icon pomodoro-play"><i class="ph-fill ph-play"></i></button>
                     </div>
                 </div>
-                
+
                 <div class="upcoming-exam-widget">
                     <div class="exam-widget-info">
-                        <span class="exam-icon">📐</span>
+                        <span class="exam-icon" style="color: var(--primary);"><i class="ph ph-ruler"></i></span>
                         <div>
                             <span class="exam-name">Maths Exam</span>
                             <span class="exam-days">18 days left</span>
@@ -87,8 +122,8 @@
 
         <!-- Main Content Area -->
         <main class="main-content">
-             <!-- Topbar Mobile (hidden on desktop) -->
-             <header class="mobile-topbar hidden-desktop">
+            <!-- Topbar Mobile (hidden on desktop) -->
+            <header class="mobile-topbar hidden-desktop">
                 <div class="mobile-logo">
                     <i class="ph-fill ph-graduation-cap logo-icon"></i>
                     <h2>StudymateAI</h2>
@@ -102,19 +137,20 @@
                 <section id="dashboard" class="view-section active">
                     <header class="view-header">
                         <div>
-                            <h2 class="view-title greeting-text">Good morning, Rahul 👋</h2>
+                            <h2 class="view-title greeting-text">Good morning, Anik 👋</h2>
                             <p class="view-subtitle current-date" id="current-date-display"></p>
                         </div>
                         <div class="user-profile">
                             <img src="" alt="User Avatar" id="user-avatar" class="avatar-img">
                         </div>
                     </header>
-                    
+
                     <div class="dashboard-grid">
                         <!-- Stats Row -->
                         <div class="stats-row">
                             <div class="stat-card glass-card">
-                                <div class="stat-icon-wrapper" style="background: rgba(108, 99, 255, 0.1); color: var(--primary);">
+                                <div class="stat-icon-wrapper"
+                                    style="background: rgba(108, 99, 255, 0.1); color: var(--primary);">
                                     <i class="ph ph-clock"></i>
                                 </div>
                                 <div class="stat-info">
@@ -123,7 +159,8 @@
                                 </div>
                             </div>
                             <div class="stat-card glass-card">
-                                <div class="stat-icon-wrapper" style="background: rgba(0, 212, 170, 0.1); color: var(--secondary);">
+                                <div class="stat-icon-wrapper"
+                                    style="background: rgba(0, 212, 170, 0.1); color: var(--secondary);">
                                     <i class="ph ph-check-circle"></i>
                                 </div>
                                 <div class="stat-info">
@@ -132,7 +169,8 @@
                                 </div>
                             </div>
                             <div class="stat-card glass-card">
-                                <div class="stat-icon-wrapper" style="background: rgba(255, 179, 71, 0.1); color: var(--warning);">
+                                <div class="stat-icon-wrapper"
+                                    style="background: rgba(255, 179, 71, 0.1); color: var(--warning);">
                                     <i class="ph ph-fire"></i>
                                 </div>
                                 <div class="stat-info">
@@ -141,11 +179,13 @@
                                 </div>
                             </div>
                             <div class="stat-card glass-card">
-                                <div class="stat-icon-wrapper" style="background: rgba(255, 107, 107, 0.1); color: var(--danger);">
+                                <div class="stat-icon-wrapper"
+                                    style="background: rgba(255, 107, 107, 0.1); color: var(--danger);">
                                     <i class="ph ph-hourglass-high"></i>
                                 </div>
                                 <div class="stat-info">
-                                    <span class="stat-value" id="stat-exam-timer" style="font-family: var(--font-mono);">8d 4h</span>
+                                    <span class="stat-value" id="stat-exam-timer"
+                                        style="font-family: var(--font-mono);">8d 4h</span>
                                     <span class="stat-label">Next exam in</span>
                                 </div>
                             </div>
@@ -165,9 +205,9 @@
                                         <!-- Populated by JS -->
                                     </div>
                                 </div>
-                                
-                                 <!-- Weekly Progress Chart -->
-                                 <div class="panel glass-card mt-4">
+
+                                <!-- Weekly Progress Chart -->
+                                <div class="panel glass-card mt-4">
                                     <div class="panel-header">
                                         <h3>Weekly Progress</h3>
                                     </div>
@@ -234,7 +274,8 @@
                                 </div>
                                 <div class="input-group">
                                     <label>Available Study Hours (Daily)</label>
-                                    <input type="range" class="form-input-range" min="1" max="8" value="4" id="plan-hours">
+                                    <input type="range" class="form-input-range" min="1" max="8" value="4"
+                                        id="plan-hours">
                                     <span id="plan-hours-display" class="range-display">4 hours</span>
                                 </div>
                                 <button type="button" class="btn-primary w-full mt-4" id="generate-plan-btn">
@@ -263,41 +304,85 @@
                                 </div>
                                 <div class="day-column">
                                     <div class="grid-cell day-header">Mon</div>
-                                    <div class="grid-cell session-slot"><div class="session-block" style="background: var(--primary);">📐 Maths</div></div>
-                                    <div class="grid-cell session-slot"><div class="session-block" style="background: var(--danger);">💻 DSA</div></div>
+                                    <div class="grid-cell session-slot">
+                                        <div class="session-block" style="background: var(--primary);" draggable="true">
+                                            <i class="ph ph-ruler" style="margin-right:4px;"></i> Maths
+                                        </div>
+                                    </div>
+                                    <div class="grid-cell session-slot">
+                                        <div class="session-block" style="background: var(--danger);" draggable="true">
+                                            <i class="ph ph-desktop" style="margin-right:4px;"></i> DSA
+                                        </div>
+                                    </div>
                                     <div class="grid-cell session-slot"></div>
-                                    <div class="grid-cell session-slot"><div class="session-block" style="background: var(--secondary);">⚗️ Chem</div></div>
+                                    <div class="grid-cell session-slot">
+                                        <div class="session-block" style="background: var(--secondary);"
+                                            draggable="true"><i class="ph ph-flask" style="margin-right:4px;"></i> Chem
+                                        </div>
+                                    </div>
                                     <div class="grid-cell session-slot"></div>
                                 </div>
                                 <div class="day-column">
                                     <div class="grid-cell day-header">Tue</div>
                                     <div class="grid-cell session-slot"></div>
-                                    <div class="grid-cell session-slot"><div class="session-block" style="background: var(--primary);">📐 Maths</div></div>
-                                    <div class="grid-cell session-slot"><div class="session-block" style="background: var(--danger);">💻 DSA</div></div>
+                                    <div class="grid-cell session-slot">
+                                        <div class="session-block" style="background: var(--primary);" draggable="true">
+                                            <i class="ph ph-ruler" style="margin-right:4px;"></i> Maths
+                                        </div>
+                                    </div>
+                                    <div class="grid-cell session-slot">
+                                        <div class="session-block" style="background: var(--danger);" draggable="true">
+                                            <i class="ph ph-desktop" style="margin-right:4px;"></i> DSA
+                                        </div>
+                                    </div>
                                     <div class="grid-cell session-slot"></div>
                                     <div class="grid-cell session-slot"></div>
                                 </div>
                                 <div class="day-column">
                                     <div class="grid-cell day-header">Wed</div>
-                                    <div class="grid-cell session-slot"><div class="session-block" style="background: var(--secondary);">⚗️ Chem</div></div>
+                                    <div class="grid-cell session-slot">
+                                        <div class="session-block" style="background: var(--secondary);"
+                                            draggable="true"><i class="ph ph-flask" style="margin-right:4px;"></i> Chem
+                                        </div>
+                                    </div>
                                     <div class="grid-cell session-slot"></div>
                                     <div class="grid-cell session-slot"></div>
-                                    <div class="grid-cell session-slot"><div class="session-block" style="background: var(--primary);">📐 Maths</div></div>
+                                    <div class="grid-cell session-slot">
+                                        <div class="session-block" style="background: var(--primary);" draggable="true">
+                                            <i class="ph ph-ruler" style="margin-right:4px;"></i> Maths
+                                        </div>
+                                    </div>
                                     <div class="grid-cell session-slot"></div>
                                 </div>
                                 <div class="day-column">
                                     <div class="grid-cell day-header">Thu</div>
                                     <div class="grid-cell session-slot"></div>
-                                    <div class="grid-cell session-slot"><div class="session-block" style="background: var(--warning);">⚛️ Physics</div></div>
-                                    <div class="grid-cell session-slot"><div class="session-block" style="background: var(--warning);">⚛️ Physics</div></div>
+                                    <div class="grid-cell session-slot">
+                                        <div class="session-block" style="background: var(--warning);" draggable="true">
+                                            <i class="ph ph-atom" style="margin-right:4px;"></i> Physics
+                                        </div>
+                                    </div>
+                                    <div class="grid-cell session-slot">
+                                        <div class="session-block" style="background: var(--warning);" draggable="true">
+                                            <i class="ph ph-atom" style="margin-right:4px;"></i> Physics
+                                        </div>
+                                    </div>
                                     <div class="grid-cell session-slot"></div>
                                     <div class="grid-cell session-slot"></div>
                                 </div>
-                                 <div class="day-column">
+                                <div class="day-column">
                                     <div class="grid-cell day-header">Fri</div>
-                                    <div class="grid-cell session-slot"><div class="session-block" style="background: var(--primary);">📐 Maths</div></div>
+                                    <div class="grid-cell session-slot">
+                                        <div class="session-block" style="background: var(--primary);" draggable="true">
+                                            <i class="ph ph-ruler" style="margin-right:4px;"></i> Maths
+                                        </div>
+                                    </div>
                                     <div class="grid-cell session-slot"></div>
-                                    <div class="grid-cell session-slot"><div class="session-block" style="background: var(--danger);">💻 DSA</div></div>
+                                    <div class="grid-cell session-slot">
+                                        <div class="session-block" style="background: var(--danger);" draggable="true">
+                                            <i class="ph ph-desktop" style="margin-right:4px;"></i> DSA
+                                        </div>
+                                    </div>
                                     <div class="grid-cell session-slot"></div>
                                     <div class="grid-cell session-slot"></div>
                                 </div>
@@ -313,7 +398,7 @@
                             <h2 class="view-title">Subjects</h2>
                             <p class="view-subtitle">Manage your syllabus and track topic progress.</p>
                         </div>
-                        <button class="btn-primary"><i class="ph ph-plus"></i> Add Subject</button>
+                        <button class="btn-primary" id="add-subject-btn"><i class="ph ph-plus"></i> Add Subject</button>
                     </header>
                     <div class="subjects-grid" id="subjects-container">
                         <!-- Populated by JS -->
@@ -322,7 +407,7 @@
 
                 <!-- Analytics View -->
                 <section id="analytics" class="view-section hidden">
-                     <header class="view-header">
+                    <header class="view-header">
                         <div>
                             <h2 class="view-title">Progress Analytics</h2>
                             <p class="view-subtitle">Track your study habits and performance over time.</p>
@@ -350,23 +435,24 @@
 
                 <!-- Reminders View -->
                 <section id="reminders" class="view-section hidden">
-                     <header class="view-header">
+                    <header class="view-header">
                         <div>
                             <h2 class="view-title">Smart Reminders</h2>
                             <p class="view-subtitle">Manage your study alerts and AI nudges.</p>
                         </div>
-                        <button class="btn-primary"><i class="ph ph-plus"></i> Add Reminder</button>
+                        <button class="btn-primary" id="add-reminder-btn"><i class="ph ph-plus"></i> Add
+                            Reminder</button>
                     </header>
                     <div class="reminders-list-container glass-card">
                         <div class="reminders-list" id="reminders-container">
-                             <!-- Populated by JS -->
+                            <!-- Populated by JS -->
                         </div>
                     </div>
                 </section>
 
                 <!-- Settings View -->
                 <section id="settings" class="view-section hidden">
-                     <header class="view-header">
+                    <header class="view-header">
                         <div>
                             <h2 class="view-title">Settings</h2>
                             <p class="view-subtitle">Manage your profile and app preferences.</p>
@@ -376,7 +462,7 @@
                         <div class="panel glass-card">
                             <h3>Profile Settings</h3>
                             <!-- Add some basic form inputs -->
-                             <p class="mt-4 text-gray">Settings implementation is a placeholder.</p>
+                            <p class="mt-4 text-gray">Settings implementation is a placeholder.</p>
                         </div>
                     </div>
                 </section>
@@ -385,9 +471,84 @@
         </main>
     </div>
 
+    <!-- Modals -->
+    <div id="modal-backdrop" class="modal-backdrop hidden"></div>
+
+    <!-- Add Subject Modal -->
+    <div id="subject-modal" class="modal hidden glass-card">
+        <div class="modal-header">
+            <h3>Add New Subject</h3>
+            <button class="btn-icon close-modal"><i class="ph ph-x"></i></button>
+        </div>
+        <form id="add-subject-form" class="modal-body form-group">
+            <div class="input-group">
+                <label>Subject Name</label>
+                <input type="text" class="form-input" id="new-subject-name" required
+                    placeholder="e.g. Quantum Mechanics">
+            </div>
+            <div class="input-group">
+                <label>Icon</label>
+                <select class="form-input" id="new-subject-icon">
+                    <option value="book-open">Book</option>
+                    <option value="calculator">Calculator</option>
+                    <option value="atom">Atom</option>
+                    <option value="flask">Flask</option>
+                    <option value="code">Code</option>
+                    <option value="globe">Globe</option>
+                    <option value="ruler">Ruler</option>
+                    <option value="pen-nib">Pen</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Theme Color</label>
+                <select class="form-input" id="new-subject-color">
+                    <option value="#6C63FF">Electric Violet (Primary)</option>
+                    <option value="#00D4AA">Mint Teal (Secondary)</option>
+                    <option value="#FF6B6B">Coral Red (Danger)</option>
+                    <option value="#FFB347">Mango Orange (Warning)</option>
+                    <option value="#4ADE80">Neon Green (Success)</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Exam Date</label>
+                <input type="date" class="form-input" id="new-subject-exam" required>
+            </div>
+            <button type="submit" class="btn-primary w-full mt-4">Save Subject</button>
+        </form>
+    </div>
+
+    <!-- Add Reminder Modal -->
+    <div id="reminder-modal" class="modal hidden glass-card">
+        <div class="modal-header">
+            <h3>Add Reminder</h3>
+            <button class="btn-icon close-modal"><i class="ph ph-x"></i></button>
+        </div>
+        <form id="add-reminder-form" class="modal-body form-group">
+            <div class="input-group">
+                <label>Reminder Title</label>
+                <input type="text" class="form-input" id="new-reminder-title" required
+                    placeholder="e.g. Review Flashcards">
+            </div>
+            <div class="input-group">
+                <label>Type</label>
+                <select class="form-input" id="new-reminder-type">
+                    <option value="daily">Daily Study</option>
+                    <option value="revision">Revision</option>
+                    <option value="exam">Exam Prep</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Time</label>
+                <input type="time" class="form-input" id="new-reminder-time" required>
+            </div>
+            <button type="submit" class="btn-primary w-full mt-4">Set Reminder</button>
+        </form>
+    </div>
+
     <!-- Application Logic -->
     <script src="js/data.js"></script>
     <script src="js/components.js"></script>
     <script src="js/app.js"></script>
 </body>
+
 </html>

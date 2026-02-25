@@ -9,7 +9,7 @@ const Components = {
             <div class="item-card">
                 <div class="item-time">${session.time}</div>
                 <div class="stat-icon-wrapper" style="width: 36px; height: 36px; font-size: 1rem; background: ${session.color}20; color: ${session.color};">
-                    ${session.emoji}
+                    <i class="ph ph-${session.icon}"></i>
                 </div>
                 <div class="item-main">
                     <div class="item-title">${session.subjectName}</div>
@@ -28,8 +28,8 @@ const Components = {
 
         return `
              <div class="item-card">
-                <div class="stat-icon-wrapper" style="width: 40px; height: 40px; font-size: 1.25rem; background: rgba(0,0,0,0.2);">
-                    ${exam.emoji}
+                <div class="stat-icon-wrapper" style="width: 40px; height: 40px; font-size: 1.25rem; background: rgba(0,0,0,0.05); color: var(--text-main);">
+                    <i class="ph ph-${exam.icon}"></i>
                 </div>
                 <div class="item-main">
                     <div class="item-title">${exam.name}</div>
@@ -48,7 +48,7 @@ const Components = {
             <div class="subject-card glass-card g-glow-primary">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                     <div style="display: flex; align-items: center; gap: 0.75rem;">
-                        <span style="font-size: 2rem;">${subject.emoji}</span>
+                        <span style="font-size: 2rem; color: ${subject.color};"><i class="ph ph-${subject.icon}"></i></span>
                         <div>
                             <h3 style="font-size: 1.125rem;">${subject.name}</h3>
                             <span class="text-gray" style="font-size: 0.875rem;">Exam: ${new Date(subject.exam_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
