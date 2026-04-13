@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Primary School | Account Access</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="header auth-header">
+    <div class="school-name">My Primary School</div>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#services">Services</a>
+    </nav>
+    <div class="auth-buttons">
+      <a class="btn" href="localStorage.html?mode=login">Login</a>
+      <a class="btn signup" href="localStorage.html?mode=signup">Sign Up</a>
+    </div>
+  </header>
+
+  <section class="auth-page">
+    <div class="auth-card">
+      <div class="auth-intro">
+        <p class="eyebrow">Account access</p>
+        <h1>Sign up or log in with local storage</h1>
+        <p>
+          Create a demo account, store it in your browser, and log in without a backend.
+        </p>
+      </div>
+
+      <div class="auth-tabs" role="tablist" aria-label="Authentication mode">
+        <button type="button" class="auth-tab active" data-mode="signup">Sign Up</button>
+        <button type="button" class="auth-tab" data-mode="login">Login</button>
+      </div>
+
+      <div id="authMessage" class="auth-message" aria-live="polite"></div>
+
+      <form id="signupForm" class="auth-form">
+        <label>
+          Full Name
+          <input type="text" id="signupName" placeholder="Enter your name" required>
+        </label>
+        <label>
+          Email
+          <input type="email" id="signupEmail" placeholder="Enter your email" required>
+        </label>
+        <label>
+          Password
+          <input type="password" id="signupPassword" placeholder="Create a password" required>
+        </label>
+        <button type="submit" class="primary-btn">Create Account</button>
+      </form>
+
+      <form id="loginForm" class="auth-form hidden">
+        <label>
+          Email
+          <input type="email" id="loginEmail" placeholder="Enter your email" required>
+        </label>
+        <label>
+          Password
+          <input type="password" id="loginPassword" placeholder="Enter your password" required>
+        </label>
+        <button type="submit" class="primary-btn">Login</button>
+      </form>
+
+      <div id="dashboardCard" class="dashboard-card hidden">
+        <p class="eyebrow">Signed in</p>
+        <h2 id="welcomeText"></h2>
+        <p id="welcomeEmail"></p>
+        <button type="button" id="logoutBtn" class="secondary-btn">Logout</button>
+      </div>
+    </div>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
