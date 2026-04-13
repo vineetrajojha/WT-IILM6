@@ -1,0 +1,162 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body */
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
+
+/* Header */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #4CAF50;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;   /* Top & Bottom padding: 10px    Left & Right padding: 20px */
+  z-index: 1000; /*  the header always stays visible above the page content   */
+}
+
+.school-name {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  margin: 0 10px;
+  font-weight: bold;
+}
+
+.nav-links a:hover {
+  text-decoration: underline;
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  background: white;
+  color: #4CAF50;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.btn.signup {
+  background: #ff9800;
+  color: white;
+}
+
+.btn:hover {
+  opacity: 0.8;
+}
+
+/* Sections */
+.section {
+  padding: 100px 20px;
+  min-height: 100vh;
+}
+
+#home {
+  background: #f9f9f9;
+}
+
+#about {
+  background: #e3f2fd;
+}
+
+#services {
+  background: #fff3e0;
+}
+
+/* Footer */
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #4CAF50;
+  color: white;
+  text-align: center;
+  padding: 10px;
+}
+
+/* Auth & Utilities */
+.hidden {
+  display: none !important;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+#user-greeting {
+  font-weight: bold;
+}
+
+.form-container {
+  max-width: 400px;
+  margin: 20px 0;
+  background: white;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.form-container input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.form-container button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  font-size: 16px;
+}
+
+.auth-section h1 {
+  margin-bottom: 20px;
+}
+
+.auth-section p {
+  margin-top: 15px;
+}
+
+.auth-section a {
+  color: #4CAF50;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.auth-section a:hover {
+  text-decoration: underline;
+}
+
+.dashboard-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 20px;
+  border-left: 5px solid #4CAF50;
+}
