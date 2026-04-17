@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Portal — View Students</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <a href="index.html" class="logo">🎓 Student Portal</a>
+    <nav>
+      <a href="index.html">Register</a>
+      <a href="students.html" class="active">View Students</a>
+    </nav>
+  </header>
+
+  <!-- Main -->
+  <main>
+    <h1 class="page-title">All Students</h1>
+    <p class="page-subtitle">Live data from Firebase Firestore.</p>
+
+    <!-- Stats -->
+    <div class="stats-bar">
+      <div class="stat-card">
+        <div class="stat-num" id="totalCount">—</div>
+        <div class="stat-label">Total Students</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="avgMarks">—</div>
+        <div class="stat-label">Avg Marks</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="topMarks">—</div>
+        <div class="stat-label">Top Marks</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div id="tableContainer">
+        <div class="spinner"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2026 Student Portal. Built with Firebase &amp;  JS.</p>
+  </footer>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script type="module" src="js/students.js"></script>
+</body>
+</html>
