@@ -1,3 +1,31 @@
+import { supabase } from './supabaseClient.js';
+
+// Toast Notification System
+const showToast = (message, type = 'success') => {
+    let container = document.getElementById('toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        container.className = 'toast-container';
+        document.body.appendChild(container);
+    }
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    let iconClass = 'ph-info';
+    if (type === 'success') iconClass = 'ph-check-circle';
+    if (type === 'error') iconClass = 'ph-warning-circle';
+    toast.innerHTML = `
+        <i class="ph-fill ${iconClass} toast-icon"></i>
+        <span class="toast-message">${message}</span>
+    `;
+    container.appendChild(toast);
+    setTimeout(() => toast.classList.add('show'), 10);
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 3500);
+};
+
 /**
  * Main Application Logic
  */
@@ -492,48 +520,178 @@ document.addEventListener('DOMContentLoaded', () => {
         const authView = document.getElementById('auth-view');
         const appContainer = document.getElementById('app-container');
         const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
         const loginEmail = document.getElementById('login-email');
-        const loginError = document.getElementById('login-error');
-        const logoutBtn = document.createElement('a'); // Add a quick way to logout
+        const loginPassword = document.getElementById('login-password');
+        const signupName = document.getElementById('signup-name');
+        const signupEmail = document.getElementById('signup-email');
+        const signupPassword = document.getElementById('signup-password');
+        const toggleAuthMode = document.getElementById('toggle-auth-mode');
+        const authTitle = document.getElementById('auth-title');
+        const authSubtitle = document.getElementById('auth-subtitle');
+        const authToggleText = document.getElementById('auth-toggle-text');
+        const logoutBtn = document.getElementById('logout-btn');
 
-        // Initial check
-        if (localStorage.getItem('studymate_auth') === 'true') {
-            authView.classList.add('hidden');
-            appContainer.classList.remove('hidden');
-        } else {
-            appContainer.classList.add('hidden');
-            authView.classList.remove('hidden');
+        // Profile Form
+        const profileForm = document.getElementById('profile-form');
+        const profileName = document.getElementById('profile-name');
+        const profileAvatar = document.getElementById('profile-avatar');
+
+        // Supabase Auth Listener
+        supabase.auth.onAuthStateChange(async (event, session) => {
+            if (session) {
+                authView.classList.add('hidden');
+                appContainer.classList.remove('hidden');
+                
+                // Fetch user profile
+                const { data: profile, error } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', session.user.id)
+                    .single();
+                
+                if (profile) {
+                    if (profileName) profileName.value = profile.full_name || '';
+                    if (profileAvatar) profileAvatar.value = profile.avatar_url || '';
+                    if (profile.full_name) {
+                        data.profile.name = profile.full_name;
+                        const greeting = document.querySelector('.greeting-text');
+                        if (greeting) greeting.textContent = `Good morning, ${profile.full_name.split(' ')[0]} 👋`;
+                    }
+                    if (profile.avatar_url) {
+                        data.profile.avatar = profile.avatar_url;
+                        elements.userAvatar.src = profile.avatar_url;
+                    }
+                } else if (error && error.code !== 'PGRST116') {
+                    console.error('Error fetching profile:', error);
+                }
+            } else {
+                appContainer.classList.add('hidden');
+                authView.classList.remove('hidden');
+            }
+        });
+
+        // Toggle Login / Signup View
+        let isLogin = true;
+        if (toggleAuthMode) {
+            toggleAuthMode.addEventListener('click', (e) => {
+                e.preventDefault();
+                isLogin = !isLogin;
+                if (isLogin) {
+                    loginForm.classList.remove('hidden');
+                    signupForm.classList.add('hidden');
+                    authTitle.textContent = 'Welcome to StudymateAI';
+                    authSubtitle.textContent = 'Log in to continue to your study planner.';
+                    toggleAuthMode.textContent = 'Sign Up';
+                    authToggleText.childNodes[0].textContent = "Don't have an account? ";
+                } else {
+                    loginForm.classList.add('hidden');
+                    signupForm.classList.remove('hidden');
+                    authTitle.textContent = 'Create an Account';
+                    authSubtitle.textContent = 'Sign up to get started.';
+                    toggleAuthMode.textContent = 'Log In';
+                    authToggleText.childNodes[0].textContent = "Already have an account? ";
+                }
+            });
         }
 
+        // Login Handler
         if (loginForm) {
-            loginForm.addEventListener('submit', (e) => {
+            loginForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const email = loginEmail.value.trim();
+                const submitBtn = loginForm.querySelector('button[type="submit"]');
+                const origText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="ph-fill ph-spinner-gap" style="animation: spin 1s linear infinite;"></i> Authenticating...';
+                
+                const { error } = await supabase.auth.signInWithPassword({
+                    email: loginEmail.value.trim(),
+                    password: loginPassword.value
+                });
 
-                if (email === 'anik@demo.com') {
-                    // Success logic
-                    localStorage.setItem('studymate_auth', 'true');
-                    loginError.classList.add('hidden');
-
-                    const submitBtn = loginForm.querySelector('button[type="submit"]');
-                    const origText = submitBtn.innerHTML;
-                    submitBtn.innerHTML = '<i class="ph-fill ph-spinner-gap" style="animation: spin 1s linear infinite;"></i> Authenticating...';
-
-                    setTimeout(() => {
-                        authView.style.opacity = '0'; // For transition wrapper
-                        setTimeout(() => {
-                            authView.classList.add('hidden');
-                            appContainer.classList.remove('hidden');
-                            appContainer.style.animation = 'fadeIn 0.5s ease';
-                            submitBtn.innerHTML = origText;
-                            authView.style.opacity = '1'; // Reset
-                        }, 500);
-                    }, 800);
-                } else {
-                    // Fail logic
-                    loginError.classList.remove('hidden');
+                submitBtn.innerHTML = origText;
+                if (error) {
+                    showToast(error.message, 'error');
                     loginForm.style.animation = 'shake 0.4s ease';
                     setTimeout(() => { loginForm.style.animation = 'none'; }, 400);
+                } else {
+                    showToast('Successfully logged in!', 'success');
+                }
+            });
+        }
+
+        // Signup Handler
+        if (signupForm) {
+            signupForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const submitBtn = signupForm.querySelector('button[type="submit"]');
+                const origText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="ph-fill ph-spinner-gap" style="animation: spin 1s linear infinite;"></i> Creating Account...';
+                
+                const { error } = await supabase.auth.signUp({
+                    email: signupEmail.value.trim(),
+                    password: signupPassword.value,
+                    options: {
+                        data: {
+                            full_name: signupName.value.trim()
+                        }
+                    }
+                });
+
+                submitBtn.innerHTML = origText;
+                if (error) {
+                    showToast(error.message, 'error');
+                    signupForm.style.animation = 'shake 0.4s ease';
+                    setTimeout(() => { signupForm.style.animation = 'none'; }, 400);
+                } else {
+                    showToast('Account created successfully!', 'success');
+                }
+            });
+        }
+
+        // Logout Handler
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                await supabase.auth.signOut();
+                showToast('Successfully logged out.', 'info');
+            });
+        }
+
+        // Profile Update Handler
+        if (profileForm) {
+            profileForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const submitBtn = profileForm.querySelector('button[type="submit"]');
+                const origText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="ph-fill ph-spinner-gap" style="animation: spin 1s linear infinite;"></i> Saving...';
+
+                const { data: { session } } = await supabase.auth.getSession();
+                if (!session) {
+                    submitBtn.innerHTML = origText;
+                    return;
+                }
+
+                const { error } = await supabase.from('profiles').upsert({
+                    id: session.user.id,
+                    full_name: profileName.value.trim(),
+                    avatar_url: profileAvatar.value.trim(),
+                    updated_at: new Date().toISOString()
+                });
+
+                submitBtn.innerHTML = origText;
+                if (error) {
+                    showToast(error.message, 'error');
+                } else {
+                    showToast('Profile updated successfully!', 'success');
+                    
+                    data.profile.name = profileName.value.trim();
+                    const greeting = document.querySelector('.greeting-text');
+                    if (greeting) greeting.textContent = `Good morning, ${profileName.value.trim().split(' ')[0]} 👋`;
+                    
+                    if(profileAvatar.value.trim()) {
+                        data.profile.avatar = profileAvatar.value.trim();
+                        elements.userAvatar.src = profileAvatar.value.trim();
+                    }
                 }
             });
         }
