@@ -8,7 +8,7 @@ export default function SignUp() {
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   // OTP state
   const [generatedOtp, setGeneratedOtp] = useState('');
   const [userOtpInput, setUserOtpInput] = useState('');
@@ -46,7 +46,8 @@ export default function SignUp() {
           template_params: {
             to_email: email,
             to_name: fullName,
-            otp: otp
+            otp: otp,
+            message: `Your verification code is: ${otp}`
           }
         })
       });
@@ -76,7 +77,7 @@ export default function SignUp() {
     try {
       const { error } = await signUp(email, password, fullName);
       if (error) throw error;
-      
+
       toast.success('Successfully signed up!');
       navigate('/login');
     } catch (error) {
@@ -94,7 +95,7 @@ export default function SignUp() {
           <h2>Create an account</h2>
           <p className="text-muted">Or <Link to="/login" style={{ color: 'var(--primary)', textDecoration: 'none' }}>sign in to your existing account</Link></p>
         </div>
-        
+
         {!isOtpSent ? (
           <form className="form-group mt-6" onSubmit={handleSendOtp}>
             <div className="input-group">
@@ -153,9 +154,9 @@ export default function SignUp() {
             <button type="submit" disabled={isSubmitting} className="btn-primary w-full mt-4">
               {isSubmitting ? 'Verifying & Signing up...' : 'Verify OTP and Sign Up'}
             </button>
-            <button 
-              type="button" 
-              className="btn mt-2 w-full pt-4 font-semibold text-center" 
+            <button
+              type="button"
+              className="btn mt-2 w-full pt-4 font-semibold text-center"
               style={{ background: 'transparent', color: 'var(--text-secondary)' }}
               onClick={() => setIsOtpSent(false)}
             >
