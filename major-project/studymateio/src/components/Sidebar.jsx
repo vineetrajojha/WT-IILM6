@@ -1,9 +1,40 @@
+import { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import toast from 'react-hot-toast';
 
 export default function Sidebar() {
   const { signOut } = useAuth();
+
+  // Pomodoro state
+  const [timeLeft, setTimeLeft] = useState(25 * 60);
+  const [isActive, setIsActive] = useState(false);
+
+  useEffect(() => {
+    let interval = null;
+    if (isActive && timeLeft > 0) {
+      interval = setInterval(() => {
+        setTimeLeft(time => time - 1);
+      }, 1000);
+    } else if (timeLeft === 0 && isActive) {
+      setIsActive(false);
+      toast.success('Pomodoro session completed! Time for a break.');
+      setTimeLeft(25 * 60); // Reset for the next session
+    }
+    return () => clearInterval(interval);
+  }, [isActive, timeLeft]);
+
+  const toggleTimer = () => setIsActive(!isActive);
+  const resetTimer = () => {
+    setIsActive(false);
+    setTimeLeft(25 * 60);
+  };
+
+  const formatTime = (seconds) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  };
 
   const handleSignOut = async (e) => {
     e.preventDefault();
@@ -65,10 +96,15 @@ export default function Sidebar() {
             <span>Pomodoro Timer</span>
           </div>
           <div className="pomodoro-controls">
-            <span className="pomodoro-time">25:00</span>
-            <button className="btn-icon pomodoro-play">
-              <i className="ph-fill ph-play"></i>
-            </button>
+            <span className="pomodoro-time" style={{ cursor: 'pointer', minWidth: '4ch', display: 'inline-block' }}>{formatTime(timeLeft)}</span>
+            <div style={{ display: 'flex', gap: '0.25rem' }}>
+              <button className="btn-icon pomodoro-play" onClick={toggleTimer}>
+                <i className={`ph-fill ${isActive ? 'ph-pause' : 'ph-play'}`}></i>
+              </button>
+              <button className="btn-icon" onClick={resetTimer} style={{ background: 'transparent', padding: '0.25rem' }} title="Reset Timer">
+                <i className="ph ph-arrow-counter-clockwise"></i>
+              </button>
+            </div>
           </div>
         </div>
 
