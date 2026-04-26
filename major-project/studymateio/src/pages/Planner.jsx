@@ -11,6 +11,7 @@ export default function Planner() {
 
   // Form State
   const [selectedSubjectId, setSelectedSubjectId] = useState('');
+  const [priority, setPriority] = useState('high');
   const [studyHours, setStudyHours] = useState(4);
   const [isGenerating, setIsGenerating] = useState(false);
 
@@ -68,25 +69,70 @@ export default function Planner() {
     try {
       const subject = subjects.find(s => s.id === selectedSubjectId);
 
-      // Basic AI heuristic: split study hours into 2-hour blocks across different days
-      const blocks = Math.ceil(studyHours / 2);
+      // Smart Scheduling Algorithm
+      const blocksNeeded = Math.ceil(studyHours / 2);
       const generatedSessions = [];
+      const occupiedSlots = new Set();
+      
+      // Load existing sessions into occupied set to prevent overlaps
+      sessions.forEach(s => {
+        const timePrefix = s.start_time.substring(0, 5);
+        occupiedSlots.add(`${s.day_of_week}-${timePrefix}`);
+      });
 
-      for (let i = 0; i < blocks; i++) {
-        // Randomly pick a day
-        const day = daysOfWeek[Math.floor(Math.random() * daysOfWeek.length)];
-        // Randomly pick a time slot
-        const time = timeSlots[Math.floor(Math.random() * (timeSlots.length - 2))];
-
-        generatedSessions.push({
-          user_id: user.id,
-          subject_id: subject.id,
-          title: `Study: ${subject.name}`,
-          day_of_week: day,
-          start_time: `${time}:00`,
-          duration_minutes: 120, // 2 hours
-          color: subject.color
+      // Group available slots by day
+      const availableByDay = {};
+      daysOfWeek.forEach(day => {
+        availableByDay[day] = [];
+        timeSlots.forEach(time => {
+          if (!occupiedSlots.has(`${day}-${time}`)) {
+            availableByDay[day].push(time);
+          }
         });
+      });
+
+      // Decide order of days based on priority
+      let dayOrder = [...daysOfWeek];
+      if (priority === 'critical') {
+        // Front-load studying
+        dayOrder = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+      } else if (priority === 'low') {
+        // Push to weekends
+        dayOrder = ['Saturday', 'Sunday', 'Friday', 'Thursday', 'Wednesday', 'Tuesday', 'Monday'];
+      } else {
+        // Spread evenly for High/Medium
+        dayOrder = ['Monday', 'Wednesday', 'Friday', 'Tuesday', 'Thursday', 'Saturday', 'Sunday'];
+      }
+
+      let blocksAssigned = 0;
+      let pass = 0;
+      
+      while (blocksAssigned < blocksNeeded && pass < 5) {
+        for (const day of dayOrder) {
+          if (blocksAssigned >= blocksNeeded) break;
+          
+          if (availableByDay[day].length > 0) {
+            // Choose the earliest available time for the day
+            const time = availableByDay[day].shift();
+            
+            generatedSessions.push({
+              user_id: user.id,
+              subject_id: subject.id,
+              title: `Study: ${subject.name}`,
+              day_of_week: day,
+              start_time: `${time}:00`,
+              duration_minutes: 120, // 2 hours each block
+              color: subject.color
+            });
+            occupiedSlots.add(`${day}-${time}`);
+            blocksAssigned++;
+          }
+        }
+        pass++;
+      }
+
+      if (blocksAssigned < blocksNeeded) {
+        toast.error(`Schedule is too full! Could only map ${blocksAssigned * 2} hours out of ${studyHours}.`);
       }
 
       const { data, error } = await supabase
@@ -140,7 +186,7 @@ export default function Planner() {
             </div>
             <div className="input-group">
               <label>Priority</label>
-              <select className="form-input" defaultValue="high">
+              <select className="form-input" value={priority} onChange={(e) => setPriority(e.target.value)}>
                 <option value="critical">Critical (Exam Soon)</option>
                 <option value="high">High</option>
                 <option value="medium">Medium</option>
@@ -176,45 +222,42 @@ export default function Planner() {
             <h3>Weekly Timetable</h3>
           </div>
 
-          <div className="timetable-grid mt-4" style={{ minWidth: '800px' }}>
+          <div className="timetable-grid mt-4 grid grid-cols-[80px_repeat(7,1fr)]" style={{ minWidth: '800px' }}>
             {/* Header row for days */}
-            <div className="time-column time-header border-b border-r">
-              <div className="flex items-center justify-center h-full">Time</div>
+            <div className="time-column time-header border-b border-r bg-gray-50 flex items-center justify-center font-semibold">
+              Time
             </div>
             {daysOfWeek.map(day => (
-              <div key={day} className="day-column day-header">
-                <div className="flex items-center justify-center h-full">{day.substring(0, 3)}</div>
+              <div key={day} className="day-column day-header border-b border-r bg-gray-50 flex items-center justify-center font-semibold">
+                {day.substring(0, 3)}
               </div>
             ))}
 
             {/* Time slots and grid cells */}
-            <div style={{ display: 'contents' }}>
-              {timeSlots.map(time => (
-                <div key={time} style={{ display: 'contents' }}>
-                  <div className="time-column border-r border-b">
-                    <div className="time-label text-center py-2 h-full flex flex-col justify-center">{time}</div>
-                  </div>
-                  {daysOfWeek.map(day => {
-                    const cellSessions = getSessionsForSlot(day, time.substring(0, 2));
-                    return (
-                      <div key={`${day}-${time}`} className="grid-cell border-r border-b min-h-[60px] relative p-1">
-                        {cellSessions.map(session => (
-                          <div
-                            key={session.id}
-                            className="session-block absolute m-1 left-0 right-0 top-0 text-white rounded p-1 text-xs shadow overflow-hidden text-center flex flex-col justify-center"
-                            style={{ background: session.color, bottom: 0, opacity: 0.9 }}
-                          >
-                            <span className="font-bold">{session.subjects?.name || session.title}</span>
-                            <span>2h</span>
-                          </div>
-                        ))}
-                      </div>
-                    )
-                  })}
+            {timeSlots.map(time => (
+              <div key={time} className="contents">
+                <div className="time-column border-r border-b flex items-center justify-center">
+                  <div className="time-label text-gray-500 text-sm font-mono">{time}</div>
                 </div>
-              ))}
-            </div>
-
+                {daysOfWeek.map(day => {
+                  const cellSessions = getSessionsForSlot(day, time.substring(0, 2));
+                  return (
+                    <div key={`${day}-${time}`} className="grid-cell border-r border-b min-h-[60px] relative p-1">
+                      {cellSessions.map(session => (
+                        <div
+                          key={session.id}
+                          className="session-block absolute m-1 left-0 right-0 top-0 text-white rounded p-1 text-xs shadow overflow-hidden text-center flex flex-col justify-center"
+                          style={{ background: session.color, bottom: 0, opacity: 0.9 }}
+                        >
+                          <span className="font-bold">{session.subjects?.name || session.title}</span>
+                          <span>2h</span>
+                        </div>
+                      ))}
+                    </div>
+                  )
+                })}
+              </div>
+            ))}
           </div>
         </div>
 
